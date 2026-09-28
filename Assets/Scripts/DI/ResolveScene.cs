@@ -2,12 +2,19 @@ using UnityEngine;
 
 namespace YogeshSriraman.DI
 {
+    public enum DebugStatus
+    {
+        Debug,
+        NoDebug
+    }
     /// <summary>
     /// Resolves dependencies for the entire scene.
     /// </summary
     public class ResolveScene : MonoBehaviour
     {
         public static ResolveScene Instance;
+
+        public DebugStatus debugStatus;
 
         private DependencyResolver dependencyResolver;
 
@@ -18,6 +25,14 @@ namespace YogeshSriraman.DI
         {
             MakeSingleTon();
             dependencyResolver = new DependencyResolver();
+            if (debugStatus == DebugStatus.Debug)
+            {
+                dependencyResolver.debug = true;
+            }
+            else
+            {
+                dependencyResolver.debug = false;
+            }
             dependencyResolver.ResolveScene();
         }
 
