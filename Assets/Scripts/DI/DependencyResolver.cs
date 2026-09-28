@@ -9,7 +9,7 @@ namespace YogeshSriraman.DI
 {
     public class DependencyResolver
     {
-
+        public bool debug;
         #region ResolveScene (Call from external class)
         /// <summary>
         /// Resolve all depenencies in the entire scene.
@@ -56,6 +56,10 @@ namespace YogeshSriraman.DI
             {
                 foreach (var component in gameObject.GetComponents<Behaviour>())
                 {
+                    if (component == null)
+                    {
+                        continue;
+                    }
                     var componentType = component.GetType();
                     var hasInjectableProperties = componentType.GetProperties()
                         .Where(IsMemberInjectable)
@@ -218,13 +222,15 @@ namespace YogeshSriraman.DI
             {
                 try
                 {
-                    Debug.Log("Injecting array of " + toInject.Length + " elements into " + injectable.GetType().Name + " at " + injectableMember.Category + " " + injectableMember.Name + " on GameObject '" + injectable.name + "'.", injectable);
-
-                    foreach (var component in toInject.Cast<Component>())
+                    if(debug)
                     {
-                        Debug.Log("> Injecting object " + component.GetType().Name + " (GameObject: '" + component.gameObject.name + "').", injectable);
+                        Debug.Log("Injecting array of " + toInject.Length + " elements into " + injectable.GetType().Name + " at " + injectableMember.Category + " " + injectableMember.Name + " on GameObject '" + injectable.name + "'.", injectable);
+    
+                        foreach (var component in toInject.Cast<Component>())
+                        {
+                            Debug.Log("> Injecting object " + component.GetType().Name + " (GameObject: '" + component.gameObject.name + "').", injectable);
+                        }
                     }
-
                     // 
                     // Create an appropriately typed array so that we don't get a type error when setting the value.
                     //
@@ -257,11 +263,14 @@ namespace YogeshSriraman.DI
             {
                 try
                 {
-                    Debug.Log("Injecting " + toInject.GetType().Name +
-                        " from this (GameObject: '" + toInject.gameObject.name +
-                        "') into " + injectable.GetType().Name + " at " +
-                        injectableMember.Category + " " + injectableMember.Name +
-                        " on GameObject '" + injectable.name + "'.", injectable);
+                    if(debug)
+                    {
+                        Debug.Log("Injecting " + toInject.GetType().Name +
+                            " from this (GameObject: '" + toInject.gameObject.name +
+                            "') into " + injectable.GetType().Name + " at " +
+                            injectableMember.Category + " " + injectableMember.Name +
+                            " on GameObject '" + injectable.name + "'.", injectable);
+                    }
 
                     injectableMember.SetValue(injectable, toInject);
 
@@ -333,11 +342,14 @@ namespace YogeshSriraman.DI
             {
                 try
                 {
-                    Debug.Log("Injecting array of " + toInject.Length + " elements into " + injectable.GetType().Name + " at " + injectableMember.Category + " " + injectableMember.Name + " on GameObject '" + injectable.name + "'.", injectable);
-
-                    foreach (var component in toInject.Cast<Component>())
+                    if(debug)
                     {
-                        Debug.Log("> Injecting object " + component.GetType().Name + " (GameObject: '" + component.gameObject.name + "').", injectable);
+                        Debug.Log("Injecting array of " + toInject.Length + " elements into " + injectable.GetType().Name + " at " + injectableMember.Category + " " + injectableMember.Name + " on GameObject '" + injectable.name + "'.", injectable);
+    
+                        foreach (var component in toInject.Cast<Component>())
+                        {
+                            Debug.Log("> Injecting object " + component.GetType().Name + " (GameObject: '" + component.gameObject.name + "').", injectable);
+                        }
                     }
 
                     // 
@@ -373,11 +385,14 @@ namespace YogeshSriraman.DI
             {
                 try
                 {
-                    Debug.Log("Injecting " + toInject.GetType().Name +
-                        " from hierarchy (GameObject: '" + toInject.gameObject.name +
-                        "') into " + injectable.GetType().Name + " at " +
-                        injectableMember.Category + " " + injectableMember.Name +
-                        " on GameObject '" + injectable.name + "'.", injectable);
+                    if(debug)
+                    {
+                        Debug.Log("Injecting " + toInject.GetType().Name +
+                            " from hierarchy (GameObject: '" + toInject.gameObject.name +
+                            "') into " + injectable.GetType().Name + " at " +
+                            injectableMember.Category + " " + injectableMember.Name +
+                            " on GameObject '" + injectable.name + "'.", injectable);
+                    }
 
                     injectableMember.SetValue(injectable, toInject);
 
@@ -539,6 +554,14 @@ namespace YogeshSriraman.DI
 
             foreach (var component in gameObject.GetComponents<Component>())
             {
+                if(comparisonType == null)
+                {
+                    Debug.LogError(gameObject);
+                }
+                if(component == null)
+                {
+                    Debug.LogError(gameObject);
+                }
                 if (comparisonType.IsAssignableFrom(component.GetType()))
                 {
                     switch (injectableMember.useType)
@@ -605,11 +628,14 @@ namespace YogeshSriraman.DI
             {
                 try
                 {
-                    Debug.Log("Injecting array of " + toInject.Length + " elements into " + injectable.GetType().Name + " at " + injectableMember.Category + " " + injectableMember.Name + " on GameObject '" + injectable.name + "'.", injectable);
-
-                    foreach (var component in toInject.Cast<Behaviour>())
+                    if(debug)
                     {
-                        Debug.Log("> Injecting object " + component.GetType().Name + " (GameObject: '" + component.gameObject.name + "').", injectable);
+                        Debug.Log("Injecting array of " + toInject.Length + " elements into " + injectable.GetType().Name + " at " + injectableMember.Category + " " + injectableMember.Name + " on GameObject '" + injectable.name + "'.", injectable);
+    
+                        foreach (var component in toInject.Cast<Behaviour>())
+                        {
+                            Debug.Log("> Injecting object " + component.GetType().Name + " (GameObject: '" + component.gameObject.name + "').", injectable);
+                        }
                     }
 
                     // 
@@ -716,12 +742,14 @@ namespace YogeshSriraman.DI
             {
                 try
                 {
-                    Debug.Log("Injecting object " + toInject.GetType().Name +
-                        " (GameObject: '" + toInject.gameObject.name +
-                        "') into " + injectable.GetType().Name + " at " +
-                        injectableMember.Category + " " + injectableMember.Name +
-                        " on GameObject '" + injectable.name + "'.", injectable);
-
+                    if(debug)
+                    {
+                        Debug.Log("Injecting object " + toInject.GetType().Name +
+                            " (GameObject: '" + toInject.gameObject.name +
+                            "') into " + injectable.GetType().Name + " at " +
+                            injectableMember.Category + " " + injectableMember.Name +
+                            " on GameObject '" + injectable.name + "'.", injectable);
+                    }
                     injectableMember.SetValue(injectable, toInject);
 
                     CallOnCompleteIfExists(injectable, injectableMember, toInject);
@@ -823,6 +851,10 @@ namespace YogeshSriraman.DI
             {
                 MethodInfo methodInfo = injectable.GetType().GetMethod(injectableMember.OnInjectComplete);
 
+                if (methodInfo == null)
+                {
+                    Debug.LogError("method info is null");
+                }
                 ParameterInfo[] paramInfo = methodInfo.GetParameters();
 
                 object[] methodParams = new object[] { };
@@ -846,24 +878,17 @@ namespace YogeshSriraman.DI
                 .Count() > 0;
         }
 
-        private bool IsForceInjectable(Type type)
+        private bool IsForceInjectable(MemberInfo memberInfo)
         {
-            var injectableProperties = type.GetProperties()
-                .Where(IsMemberForceInjectable);
+            var isForceInjectable = IsMemberForceInjectable(memberInfo);
 
-            var injectableFields = type.GetFields()
-                .Where(IsMemberForceInjectable);
-
-            if (injectableProperties.Count() > 0 || injectableFields.Count() > 0)
-                return true;
-
-            return false;
+            return isForceInjectable;
         }
 
         private bool PerformForceInjectObject(Component injectable,
             IInjectableMember injectableMember)
         {
-            if (IsForceInjectable(injectable.GetType()))
+            if (IsForceInjectable(injectableMember.MemberInfo))
             {
                 if (injectableMember.InjectType == InjectType.Interface)
                 {
@@ -884,6 +909,7 @@ namespace YogeshSriraman.DI
                 }
                 else if(injectableMember.InjectFrom == InjectFrom.Above)
                 {
+                    newObj.transform.parent = injectable.gameObject.transform.parent;
                     injectable.gameObject.transform.parent = newObj.transform;
                 }
 
@@ -911,7 +937,7 @@ namespace YogeshSriraman.DI
                 return false;
             }
 
-            if (IsForceInjectable(injectable.GetType()))
+            if (IsForceInjectable(injectableMember.MemberInfo))
             {
                 //GameObject newObj = new GameObject();
                 Type t = injectableMember.MemberType;
